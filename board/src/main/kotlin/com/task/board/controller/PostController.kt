@@ -1,6 +1,7 @@
 package com.task.board.controller
 
 import com.task.board.dto.*
+import com.task.board.service.PostService
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -8,13 +9,15 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
 @RestController
-class PostController {
+class PostController(
+    private val postService: PostService,
+) {
 
     @PostMapping("/posts")
     fun createPost(
         @RequestBody postCreateRequest: PostCreateRequest,
     ): Long{
-        return 1L
+        return postService.createPost(postCreateRequest.toDto())
     }
 
     @PutMapping("/posts/{id}")
@@ -22,16 +25,15 @@ class PostController {
         @PathVariable id: Long,
         @RequestBody postUpdateRequest: PostUpdateRequest
     ): Long{
-        return id
+        return postService.updatePost(id, postUpdateRequest.toDto())
     }
 
     @DeleteMapping("/posts/{id}")
     fun deletePost(
         @PathVariable id: Long,
         @RequestParam createdBy: String,
-    ): Long{
-        println(createdBy)
-        return id
+    ): Long {
+        return postService.deletePost(id, createdBy)
     }
 
     @GetMapping("/posts/{id}")
