@@ -39,9 +39,9 @@ class PostServiceTest(
             }
         }
     }
-    given("게시글 수정시"){
+    given("게시글 수정 시"){
         val saved = postRepository.save(Post(title= "title", content = "content", createdBy = "harris"))
-        When("정상 수정시"){
+        When("정상 수정 시"){
             val updatedId = postService.updatePost(saved.id, PostUpdateRequestDto(
                 title = "updated title",
                 content = "updated content",
@@ -55,7 +55,7 @@ class PostServiceTest(
                 updated?.content shouldBe "updated content"
             }
         }
-        When("게시글이 없을 때"){
+        When("게시글이 없을 시"){
             then("게시글을 찾을 수 없다 예외 발생"){
                 shouldThrow<PostNotFoundException> { postService.updatePost(9999L, PostUpdateRequestDto(
                     title = "update title",
@@ -74,9 +74,9 @@ class PostServiceTest(
             }
         }
     }
-    given("게시글 삭제시"){
+    given("게시글 삭제 시"){
         val saved = postRepository.save(Post(title= "title", content = "content", createdBy = "harris"))
-        When("정상 삭제시"){
+        When("정상 삭제 시"){
             val postId = postService.deletePost(saved.id, "harris")
             then("게시글이 정상적으로 삭제됨"){
                 postId shouldBe saved.id
@@ -87,6 +87,18 @@ class PostServiceTest(
             val saved2 = postRepository.save(Post(title= "title", content = "content", createdBy = "harris"))
             then("삭제할 수 없는 게시물 예외가 발생"){
                 shouldThrow<PostNotDeletableException> { postService.deletePost(saved2.id, "harris2") }
+            }
+        }
+    }
+    given("게시글 상세조회 시"){
+        val saved = postRepository.save(Post(title= "title", content = "content", createdBy = "harris"))
+        When("정상 조회 시"){
+            val post = postService.getPost(saved.id)
+            then("게시글의 내용이 정상적으로 반환됨 확인"){
+                post.id shouldBe saved.id
+                post.title shouldBe "title"
+                post.content shouldBe "content"
+                post.createdBy shouldBe "harris"
             }
         }
     }
