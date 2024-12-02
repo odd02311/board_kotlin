@@ -23,7 +23,7 @@ class Post(
         protected set
 
     fun update(postUpdateRequestDto: PostUpdateRequestDto) {
-        if(postUpdateRequestDto.updatedBy != this.createdBy){
+        if (postUpdateRequestDto.updatedBy != this.createdBy) {
             throw PostNotUpdatableException()
         }
         this.title = postUpdateRequestDto.title
