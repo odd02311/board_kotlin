@@ -2,7 +2,6 @@ package com.task.board.controller
 
 import com.task.board.dto.*
 import com.task.board.service.PostService
-import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
@@ -16,15 +15,15 @@ class PostController(
     @PostMapping("/posts")
     fun createPost(
         @RequestBody postCreateRequest: PostCreateRequest,
-    ): Long{
+    ): Long {
         return postService.createPost(postCreateRequest.toDto())
     }
 
     @PutMapping("/posts/{id}")
     fun updatePost(
         @PathVariable id: Long,
-        @RequestBody postUpdateRequest: PostUpdateRequest
-    ): Long{
+        @RequestBody postUpdateRequest: PostUpdateRequest,
+    ): Long {
         return postService.updatePost(id, postUpdateRequest.toDto())
     }
 
@@ -39,8 +38,8 @@ class PostController(
     @GetMapping("/posts/{id}")
     fun getPost(
         @PathVariable id: Long,
-    ): PostDetailResponse{
-        return PostDetailResponse(1L, "title", "content", "createdBy", LocalDateTime.now().toString())
+    ): PostDetailResponse {
+        return postService.getPost(id).toResponse()
     }
 
     @GetMapping("/posts")
@@ -48,8 +47,6 @@ class PostController(
         pageable: Pageable,
         postSearchRequest: PostSearchRequest,
     ): Page<PostSummaryResponse> {
-        println("title: ${postSearchRequest.title}")
-        println("createdBy: ${postSearchRequest.createdBy}")
-        return Page.empty()
+        return postService.findPageBy(pageable, postSearchRequest.toDto()).toResponse()
     }
 }
