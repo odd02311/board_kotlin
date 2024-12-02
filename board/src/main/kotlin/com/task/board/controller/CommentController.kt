@@ -2,18 +2,20 @@ package com.task.board.controller
 
 import com.task.board.controller.dto.CommentCreateRequest
 import com.task.board.controller.dto.CommentUpdateRequest
+import com.task.board.controller.dto.toDto
+import com.task.board.service.CommentService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-class CommentController {
+class CommentController(
+    private val commentService: CommentService,
+) {
     @PostMapping("/posts/{postId}/comments")
     fun createComment(
         @PathVariable postId: Long,
         @RequestBody commentCreateRequest: CommentCreateRequest,
     ): Long{
-        println(commentCreateRequest.content)
-        println(commentCreateRequest.createdBy)
-        return 1L
+        return commentService.createComment(postId, commentCreateRequest.toDto())
     }
 
     @PutMapping("/comments/{commentId}")
@@ -21,9 +23,7 @@ class CommentController {
         @PathVariable commentId: Long,
         @RequestBody commentUpdateRequest: CommentUpdateRequest,
     ): Long{
-        println(commentUpdateRequest.content)
-        println(commentUpdateRequest.updatedBy)
-        return commentId
+        return commentService.updateComment(commentId, commentUpdateRequest.toDto())
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -31,7 +31,6 @@ class CommentController {
         @PathVariable commentId: Long,
         @RequestParam deletedBy: String,
     ): Long{
-        println(deletedBy)
-        return commentId
+        return commentService.deleteComment(commentId, deletedBy)
     }
 }
