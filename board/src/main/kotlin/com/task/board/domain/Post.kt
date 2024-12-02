@@ -2,10 +2,7 @@ package com.task.board.domain
 
 import com.task.board.exception.PostNotUpdatableException
 import com.task.board.service.dto.PostUpdateRequestDto
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 class Post(
@@ -20,6 +17,9 @@ class Post(
     var title: String = title
         protected set
     var content: String = content
+        protected set
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = [(CascadeType.ALL)])
+    var comments: MutableList<Comment> = mutableListOf()
         protected set
 
     fun update(postUpdateRequestDto: PostUpdateRequestDto) {

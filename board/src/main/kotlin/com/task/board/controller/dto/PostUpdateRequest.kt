@@ -1,4 +1,4 @@
-package com.task.board.dto
+package com.task.board.controller.dto
 
 import com.task.board.service.dto.PostUpdateRequestDto
 
