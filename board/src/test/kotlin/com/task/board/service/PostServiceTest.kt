@@ -1,7 +1,7 @@
 package com.task.board.service
 
 import com.task.board.domain.Post
-import com.task.board.dto.PostSearchRequest
+import com.task.board.controller.dto.PostSearchRequest
 import com.task.board.exception.PostNotDeletableException
 import com.task.board.exception.PostNotFoundException
 import com.task.board.exception.PostNotUpdatableException

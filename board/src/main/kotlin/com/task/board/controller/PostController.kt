@@ -1,11 +1,10 @@
 package com.task.board.controller
 
-import com.task.board.dto.*
+import com.task.board.controller.dto.*
 import com.task.board.service.PostService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 @RestController
 class PostController(
