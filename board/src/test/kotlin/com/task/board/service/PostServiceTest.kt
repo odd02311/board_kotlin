@@ -2,9 +2,11 @@ package com.task.board.service
 
 import com.task.board.domain.Post
 import com.task.board.controller.dto.PostSearchRequest
+import com.task.board.domain.Comment
 import com.task.board.exception.PostNotDeletableException
 import com.task.board.exception.PostNotFoundException
 import com.task.board.exception.PostNotUpdatableException
+import com.task.board.repository.CommentRepository
 import com.task.board.repository.PostRepository
 import com.task.board.service.dto.PostCreateRequestDto
 import com.task.board.service.dto.PostSearchRequestDto
@@ -28,6 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 class PostServiceTest(
     private val postService: PostService,
     private val postRepository: PostRepository,
+    private val commentRepository: CommentRepository,
 ) : BehaviorSpec({
     beforeSpec {
         postRepository.saveAll(
@@ -142,6 +145,22 @@ class PostServiceTest(
         When("게시글이 없을 때") {
             then("게시글을 찾을 수 없다 예외 발생") {
                 shouldThrow<PostNotFoundException> { postService.getPost(9999L) }
+            }
+        }
+        When("댓글 추가 시"){
+            commentRepository.save(Comment(content = "댓글 내용1", post = saved, createdBy = "댓글 작성자"))
+            commentRepository.save(Comment(content = "댓글 내용2", post = saved, createdBy = "댓글 작성자"))
+            commentRepository.save(Comment(content = "댓글 내용3", post = saved, createdBy = "댓글 작성자"))
+            val post = postService.getPost(saved.id)
+            then("댓글이 함께 조회됨"){
+                post.comments.size shouldBe 3
+                post.comments[0].content shouldBe "댓글 내용1"
+                post.comments[1].content shouldBe "댓글 내용2"
+                post.comments[2].content shouldBe "댓글 내용3"
+                post.comments[0].createdBy shouldBe "댓글 작성자"
+                post.comments[1].createdBy shouldBe "댓글 작성자"
+                post.comments[2].createdBy shouldBe "댓글 작성자"
+
             }
         }
     }
