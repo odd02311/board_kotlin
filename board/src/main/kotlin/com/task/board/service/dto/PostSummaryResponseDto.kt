@@ -10,18 +10,21 @@ data class PostSummaryResponseDto(
     val createdBy: String,
     val createdAt: String,
     val firstTag: String? = null,
+    val likeCount: Long = 0,
 )
 
-fun Page<Post>.toSummaryResponseDto() = PageImpl( // page에 대한 확장 함수
-    content.map { it.toSummaryResponseDto() },
+fun Page<Post>.toSummaryResponseDto(countLike: (Long) -> Long) = PageImpl( // page에 대한 확장 함수
+    content.map { it.toSummaryResponseDto(countLike) },
     pageable,
     totalElements,
 )
 
-fun Post.toSummaryResponseDto() = PostSummaryResponseDto(   // post를 summary로 만드는 확장함수
+fun Post.toSummaryResponseDto(countLike: (Long) -> Long) = PostSummaryResponseDto(   // post를 summary로 만드는 확장함수
     id = id,
     title = title,
     createdBy = createdBy,
     createdAt = createdAt.toString(),
     firstTag = tags.firstOrNull()?.name,
+    likeCount = countLike(id)
+
 )
