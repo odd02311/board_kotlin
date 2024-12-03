@@ -3,6 +3,7 @@ package com.task.board.service
 import com.task.board.exception.PostNotDeletableException
 import com.task.board.exception.PostNotFoundException
 import com.task.board.repository.PostRepository
+import com.task.board.repository.TagRepository
 import com.task.board.service.dto.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class PostService(
     private val postRepository: PostRepository,
     private val likeService: LikeService,
+    private val tagRepository: TagRepository,
 ) {
     @Transactional
     fun createPost(requestDto: PostCreateRequestDto): Long {
@@ -42,6 +44,10 @@ class PostService(
     }
 
     fun findPageBy(pageRequest: Pageable, postSearchRequestDto: PostSearchRequestDto): Page<PostSummaryResponseDto> {
+        // N+1 최적화
+        postSearchRequestDto.tag?. let {
+            return tagRepository.findPageBy(pageRequest, it).toSummaryResponseDto(likeService::countLike)
+        }
         return postRepository.findPageBy(pageRequest, postSearchRequestDto)
             .toSummaryResponseDto(likeService::countLike)
 
