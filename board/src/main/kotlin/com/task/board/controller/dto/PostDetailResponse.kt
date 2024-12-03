@@ -21,4 +21,5 @@ fun PostDetailResponseDto.toResponse() = PostDetailResponse(
     createdAt = createdAt,
     comments = comments.map { it.toResponse() },
     tags = tags,
+    likeCount = likeCount,
 )
