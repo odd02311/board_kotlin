@@ -6,10 +6,10 @@ import jakarta.persistence.*
 
 @Entity
 class Post(
-    createdBy: String,
+    createdBy: String, // createdBy(작성자)와 title은 Post의 컬럼으로 존재
     title: String,
     content: String,
-    tags: List<String> = emptyList(),
+    tags: List<String> = emptyList(), // 연관관계가 있는 다른 테이블로 존재
 ) : BaseEntity(createdBy) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
